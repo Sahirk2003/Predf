@@ -53,8 +53,10 @@ async def on_message(message):
                     full_path = os.path.join(converted_pdfs,image_path)
                     await THREAD.send(file=nextcord.File(full_path))
                     os.remove(full_path)
+                
+                return
 
-                os.rmdir(converted_pdfs)
+            os.rmdir(converted_pdfs)
                 
        
 client.run(TOKEN)  
