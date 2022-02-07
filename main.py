@@ -8,10 +8,8 @@ import random
 from Private.config import TOKEN
 
 warnings.simplefilter ('ignore', Image.DecompressionBombWarning)
-print ('start')
 dir = os.path.dirname(__file__)
 client = nextcord.Client()
-
 
 @client.event
 async def on_ready():
@@ -38,7 +36,6 @@ async def on_message(message):
             if 'pdf' in attachment.content_type:
                 THREAD = await message.create_thread(name = 'Feedback for {nameu}'.format (nameu = str(message.author).split('#')[0]))
 
-                #await message.channel.send(attachment.url)
                 async with aiohttp.ClientSession() as session:
                     url = attachment.url
                     async with session.get(url) as resp:
@@ -48,16 +45,16 @@ async def on_message(message):
                             
 
                 convert_from_path(attachment_file, dpi=500, output_folder=converted_pdfs, fmt ="jpeg", size =(1000,None), poppler_path=r"C:\Users\Sahir\Downloads\Release-21.11.0-0\poppler-21.11.0\Library\bin", paths_only= True)
+                
                 os.remove(attachment_file)
+
                 for image_path in os.listdir(converted_pdfs):
                     full_path = os.path.join(converted_pdfs,image_path)
                     await THREAD.send(file=nextcord.File(full_path))
                     os.remove(full_path)
                 
                 os.rmdir(converted_pdfs)
+
                 return
 
-            
-                
-       
 client.run(TOKEN)  
