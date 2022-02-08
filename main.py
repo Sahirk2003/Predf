@@ -10,7 +10,7 @@ from Private.config import TOKEN
 warnings.simplefilter ('ignore', Image.DecompressionBombWarning)
 dir = os.path.dirname(__file__)
 client = nextcord.Client()
-
+is_thread = False
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
@@ -22,8 +22,8 @@ async def on_message(message):
     if message.author == client.user:
         return
     
-    channel = str(message.channel.name)
-   
+    channel = message.channel.name
+    channel_type = message.channel
 
     if message.attachments:
 
@@ -34,7 +34,11 @@ async def on_message(message):
             os.mkdir(converted_pdfs)
 
             if 'pdf' in attachment.content_type:
-                THREAD = await message.create_thread(name = 'Feedback for {nameu}'.format (nameu = str(message.author).split('#')[0]))
+                print(isinstance(channel_type, nextcord.threads.Thread))
+                if not isinstance(channel_type, nextcord.threads.Thread):
+                    THREAD = await message.create_thread(name = 'Feedback for {nameu}'.format (nameu = str(message.author).split('#')[0]))
+                else:
+                    THREAD = message.channel
 
                 async with aiohttp.ClientSession() as session:
                     url = attachment.url
@@ -50,7 +54,9 @@ async def on_message(message):
 
                 for image_path in os.listdir(converted_pdfs):
                     full_path = os.path.join(converted_pdfs,image_path)
+                   
                     await THREAD.send(file=nextcord.File(full_path))
+                    
                     os.remove(full_path)
                 
                 os.rmdir(converted_pdfs)
