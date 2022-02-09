@@ -29,12 +29,13 @@ async def on_message(message):
 
         for attachment in message.attachments:
 
-            attachment_file = os.path.join(dir, r'attachment_file{n}.pdf'.format(n = random.randint(1,100000)))
-            converted_pdfs = os.path.join(dir, r'ConvertedPDFs{i}'.format(i = random.randint(1,100000)))
-            os.mkdir(converted_pdfs)
-
             if 'pdf' in attachment.content_type:
-                print(isinstance(channel_type, nextcord.threads.Thread))
+
+                attachment_file = os.path.join(dir, r'attachment_file{n}.pdf'.format(n = random.randint(1,100000)))
+                converted_pdfs = os.path.join(dir, r'ConvertedPDFs{i}'.format(i = random.randint(1,100000)))
+                os.mkdir(converted_pdfs)
+
+               
                 if not isinstance(channel_type, nextcord.threads.Thread):
                     THREAD = await message.create_thread(name = 'Feedback for {nameu}'.format (nameu = str(message.author).split('#')[0]))
                 else:
@@ -43,7 +44,7 @@ async def on_message(message):
                 async with aiohttp.ClientSession() as session:
                     url = attachment.url
                     async with session.get(url) as resp:
-                        if resp.status ==200:
+                        if resp.status == 200:
                             with open(attachment_file, mode ='wb') as f:
                                 f.write(await resp.read())
                             
@@ -58,9 +59,10 @@ async def on_message(message):
                     await THREAD.send(file=nextcord.File(full_path))
                     
                     os.remove(full_path)
-                
+
                 os.rmdir(converted_pdfs)
 
                 return
+
 
 client.run(TOKEN)  
