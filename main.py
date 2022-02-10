@@ -37,8 +37,10 @@ async def on_message(message):
 
                
                 if not isinstance(channel_type, nextcord.threads.Thread):
-                    THREAD = await message.create_thread(name = 'Feedback for {nameu}'.format (nameu = str(message.author).split('#')[0]))
+                    send_message = await message.channel.send(content = "Converting {}".format(attachment.filename))
+                    THREAD = await send_message.create_thread(name = attachment.filename)
                 else:
+                    await message.channel.send(content = "Converting {}".format(attachment.filename))
                     THREAD = message.channel
 
                 async with aiohttp.ClientSession() as session:
@@ -62,7 +64,7 @@ async def on_message(message):
 
                 os.rmdir(converted_pdfs)
 
-                return
+                
 
 
 client.run(TOKEN)  
