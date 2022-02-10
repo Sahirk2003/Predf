@@ -5,7 +5,7 @@ import os
 import warnings
 from PIL import Image
 import random
-from Private.config import TOKEN
+from Private.config import TOKEN, Poppler_Path
 
 warnings.simplefilter ('ignore', Image.DecompressionBombWarning)
 dir = os.path.dirname(__file__)
@@ -51,7 +51,7 @@ async def on_message(message):
                                 f.write(await resp.read())
                             
 
-                convert_from_path(attachment_file, dpi=500, output_folder=converted_pdfs, fmt ="jpeg", size =(1000,None), poppler_path=r"C:\Users\Sahir\Downloads\Release-21.11.0-0\poppler-21.11.0\Library\bin", paths_only= True)
+                convert_from_path(attachment_file, dpi=500, output_folder=converted_pdfs, fmt ="jpeg", size =(1000,None), poppler_path = Poppler_Path, paths_only= True)
                 
                 os.remove(attachment_file)
 
