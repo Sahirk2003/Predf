@@ -22,8 +22,7 @@ async def on_message(message):
     if message.author == client.user:
         return
     
-    channel = message.channel.name
-    channel_type = message.channel
+    channel = message.channel
 
     if message.attachments:
 
@@ -36,12 +35,12 @@ async def on_message(message):
                 os.mkdir(converted_pdfs)
 
                
-                if not isinstance(channel_type, nextcord.threads.Thread):
-                    send_message = await message.channel.send(content = "Converting {}".format(attachment.filename))
+                if not isinstance(channel, nextcord.threads.Thread):
+                    send_message = await channel.send(content = "Converting {}".format(attachment.filename))
                     THREAD = await send_message.create_thread(name = attachment.filename)
                 else:
-                    await message.channel.send(content = "Converting {}".format(attachment.filename))
-                    THREAD = message.channel
+                    await channel.send(content = "Converting {}".format(attachment.filename))
+                    THREAD = channel
 
                 async with aiohttp.ClientSession() as session:
                     url = attachment.url
