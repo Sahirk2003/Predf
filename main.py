@@ -10,7 +10,7 @@ from Private.config import TOKEN
 intents = nextcord.Intents.all()
 warnings.simplefilter ('ignore', Image.DecompressionBombWarning)
 dir = os.path.dirname(__file__)
-client = nextcord.Client()
+client = nextcord.Client(intents = intents)
 is_thread = False
 @client.event
 async def on_ready():
