@@ -5,8 +5,9 @@ import os
 import warnings
 from PIL import Image
 import random
-from Private.config import TOKEN, Poppler_Path
+from Private.config import TOKEN
 
+intents = nextcord.Intents.all()
 warnings.simplefilter ('ignore', Image.DecompressionBombWarning)
 dir = os.path.dirname(__file__)
 client = nextcord.Client()
@@ -50,20 +51,17 @@ async def on_message(message):
                                 f.write(await resp.read())
                             
 
-                convert_from_path(attachment_file, dpi=500, output_folder=converted_pdfs, fmt ="jpeg", size =(1000,None), poppler_path = Poppler_Path, paths_only= True)
+                image_paths_list = convert_from_path(attachment_file, dpi=500, output_folder=converted_pdfs, fmt ="jpeg", size =(1000,None), paths_only= True)
                 
                 os.remove(attachment_file)
 
-                for image_path in os.listdir(converted_pdfs):
-                    full_path = os.path.join(converted_pdfs,image_path)
-                   
-                    await THREAD.send(file=nextcord.File(full_path))
-                    
-                    os.remove(full_path)
+                for image_path in image_paths_list:
+                  
+                    await THREAD.send(file=nextcord.File(image_path))
+                    os.remove(image_path)
 
                 os.rmdir(converted_pdfs)
-
-                
-
+            
+            return
 
 client.run(TOKEN)  
